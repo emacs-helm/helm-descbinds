@@ -260,6 +260,7 @@ This function called two argument KEY and BINDING."
 (defvar helm-descbinds-Orig-describe-bindings
   (symbol-function 'describe-bindings))
 
+;;;###autoload
 (defun helm-descbinds-install ()
   "Use `helm-descbinds' as a replacement of `describe-bindings'."
   (interactive)
