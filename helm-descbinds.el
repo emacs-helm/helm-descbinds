@@ -97,6 +97,16 @@
 	   (function :tag "Function")))
   :group 'helm-descbinds)
 
+(defcustom helm-descbinds-string-actions
+  '(("Insert" . helm-descbinds-action:insert-string))
+  "Actions of selected string candidate."
+  :type '(repeat
+          (cons
+           :tag "Action"
+           (string :tag "Name")
+           (function :tag "Function")))
+  :group 'helm-descbinds)
+
 (defcustom helm-descbinds-candidate-formatter
   'helm-descbinds-default-candidate-formatter
   "Candidate formatter function.
@@ -182,6 +192,10 @@ This function called two argument KEY and BINDING."
   "An action that find selected CANDIDATE function."
   (find-function (cdr candidate)))
 
+(defun helm-descbinds-action:insert-string (candidate)
+  "An action that inserts the string CANDIDATE."
+  (insert (cdr candidate)))
+
 (defun helm-descbinds-default-candidate-formatter (key binding)
   "Default candidate formatter."
   (format "%-10s\t%s" key binding))
@@ -199,12 +213,14 @@ This function called two argument KEY and BINDING."
   (mapcar
    (lambda (pair)
      (cons (funcall helm-descbinds-candidate-formatter
-		    (car pair) (cdr pair))
-	   (cons (car pair) (intern-soft (cdr pair)))))
+                    (car pair) (cdr pair))
+           (cons (car pair) (or (intern-soft (cdr pair))
+                                (cdr pair)))))
    candidates))
 
 (defun helm-descbinds-transform-actions (actions candidate)
-  (and (commandp (cdr candidate)) (or actions helm-descbinds-actions)))
+  (or (and (commandp (cdr candidate) 'interactive) (or actions helm-descbinds-actions))
+      (and (stringp (cdr candidate)) helm-descbinds-string-actions)))
 
 (defun helm-descbinds-sources (buffer &optional prefix menus)
   (mapcar
