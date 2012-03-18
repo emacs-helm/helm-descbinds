@@ -5,7 +5,7 @@
 
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; Keywords: helm, help
-;; Version: 1.06
+;; Version: 1.07
 ;; Time-stamp: <2012-03-18 01:35:51 cofi>
 
 ;; This file is free software; you can redistribute it and/or modify
