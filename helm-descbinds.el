@@ -6,7 +6,6 @@
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; Keywords: helm, help
 ;; Version: 1.07
-;; Time-stamp: <2012-03-18 01:35:51 cofi>
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -29,11 +28,11 @@
 ;;; Usage:
 ;; Add followings on your .emacs.
 ;;
-;;   (require 'descbinds-helm)
-;;   (descbinds-helm-install)
+;;   (require 'helm-descbinds)
+;;   (helm-descbinds-install)
 ;;
-;; Now, `describe-bindings' is replaced to `descbinds-helm'. Type
-;; `C-h b', `C-x C-h' these run `descbinds-helm'.
+;; Now, `describe-bindings' is replaced to `helm-descbinds'. Type
+;; `C-h b', `C-x C-h' these run `helm-descbinds'.
 ;;
 ;; In the Helm buffer, you can select key-binds with helm interface.
 ;;
@@ -46,11 +45,11 @@
 
 ;;; History:
 ;; 2012-03-18 Michael Markert <markert.michael@googlemail.com>
-;;   * descbinds-helm.el: Version 1.07
+;;   * helm-descbinds.el: Version 1.07
 ;;   make strings bound to keys insertable
 ;;
 ;; 2012-03-18 Michael Markert <markert.michael@googlemail.com>
-;;   * descbinds-helm.el: Version 1.06
+;;   * helm-descbinds.el: Version 1.06
 ;;   port to helm
 ;;
 ;; 2010-02-05   Taiki SUGAWARA  <sugawara_t@ariel-networks.com>
