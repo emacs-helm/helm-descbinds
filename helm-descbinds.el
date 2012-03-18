@@ -46,6 +46,10 @@
 
 ;;; History:
 ;; 2012-03-18 Michael Markert <markert.michael@googlemail.com>
+;;   * descbinds-helm.el: Version 1.07
+;;   make strings bound to keys insertable
+;;
+;; 2012-03-18 Michael Markert <markert.michael@googlemail.com>
 ;;   * descbinds-helm.el: Version 1.06
 ;;   port to helm
 ;;
@@ -106,6 +110,11 @@
            (string :tag "Name")
            (function :tag "Function")))
   :group 'helm-descbinds)
+
+(defcustom helm-descbinds-strings-to-ignore
+  '("Keyboard Macro" "Prefix Command")
+  "Strings to ignore as a possible string candidate."
+  :type '(repeat string))
 
 (defcustom helm-descbinds-candidate-formatter
   'helm-descbinds-default-candidate-formatter
@@ -212,10 +221,12 @@ This function called two argument KEY and BINDING."
 (defun helm-descbinds-transform-candidates (candidates)
   (mapcar
    (lambda (pair)
-     (cons (funcall helm-descbinds-candidate-formatter
-                    (car pair) (cdr pair))
-           (cons (car pair) (or (intern-soft (cdr pair))
-                                (cdr pair)))))
+     (let ((key (car pair))
+           (command (cdr pair)))
+       (cons (funcall helm-descbinds-candidate-formatter key command)
+             (cons key (or (intern-soft command)
+                           (unless (memq command helm-descbinds-strings-to-ignore)
+                             command))))))
    candidates))
 
 (defun helm-descbinds-transform-actions (actions candidate)
