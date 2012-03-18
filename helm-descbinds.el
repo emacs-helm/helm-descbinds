@@ -224,7 +224,7 @@ This function called two argument KEY and BINDING."
            (command (cdr pair)))
        (cons (funcall helm-descbinds-candidate-formatter key command)
              (cons key (or (intern-soft command)
-                           (unless (memq command helm-descbinds-strings-to-ignore)
+                           (unless (member command helm-descbinds-strings-to-ignore)
                              command))))))
    candidates))
 
