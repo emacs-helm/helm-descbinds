@@ -1,4 +1,4 @@
-;;; descbinds-helm.el --- Yet Another `describe-bindings' with `helm'.
+;;; helm-descbinds.el --- Yet Another `describe-bindings' with `helm'.
 
 ;; Copyright (C) 2008, 2009, 2010  Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; Copyright (C) 2012  Michael Markert <markert.michael@googlemail.com>
@@ -243,6 +243,6 @@ This function called two argument KEY and BINDING."
   (interactive)
   (fset 'describe-bindings descbinds-helm-Orig-describe-bindings))
 
-(provide 'descbinds-helm)
+(provide 'helm-descbinds)
 
-;;; descbinds-helm.el ends here
+;;; helm-descbinds.el ends here
