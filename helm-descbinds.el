@@ -80,56 +80,56 @@
 
 (require 'helm)
 
-(defgroup descbinds-helm nil
+(defgroup helm-descbinds nil
   "Yet Another `describe-bindings' with `helm'."
-  :prefix "descbinds-helm-"
+  :prefix "helm-descbinds-"
   :group 'helm)
 
-(defcustom descbinds-helm-actions
-  '(("Execute" . descbinds-helm-action:execute)
-    ("Describe Function" . descbinds-helm-action:describe)
-    ("Find Function" . descbinds-helm-action:find-func))
+(defcustom helm-descbinds-actions
+  '(("Execute" . helm-descbinds-action:execute)
+    ("Describe Function" . helm-descbinds-action:describe)
+    ("Find Function" . helm-descbinds-action:find-func))
   "Actions of selected candidate."
   :type '(repeat
 	  (cons
 	   :tag "Action"
 	   (string :tag "Name")
 	   (function :tag "Function")))
-  :group 'descbinds-helm)
+  :group 'helm-descbinds)
 
-(defcustom descbinds-helm-candidate-formatter
-  'descbinds-helm-default-candidate-formatter
+(defcustom helm-descbinds-candidate-formatter
+  'helm-descbinds-default-candidate-formatter
   "Candidate formatter function.
 This function called two argument KEY and BINDING."
   :type 'function
-  :group 'descbinds-helm)
+  :group 'helm-descbinds)
 
 
-(defcustom descbinds-helm-window-style 'one-window
+(defcustom helm-descbinds-window-style 'one-window
   "Window splitting style."
   :type '(choice
 	  (const :tag "One Window" one-window)
 	  (const :tag "Same Window" same-window)
 	  (const :tag "Split Window" split-window))
-  :group 'descbinds-helm)
+  :group 'helm-descbinds)
 
 
-(defcustom descbinds-helm-section-order
+(defcustom helm-descbinds-section-order
   '("Major Mode Bindings" "Minor Mode Bindings" "Global Bindings")
   "A list of section order by name regexp."
   :type '(repeat (regexp :tag "Regexp"))
-  :group 'descbinds-helm)
+  :group 'helm-descbinds)
 
-(defcustom descbinds-helm-source-template
-  '((candidate-transformer . descbinds-helm-transform-candidates)
-    (persistent-action . descbinds-helm-action:describe)
-    (action-transformer . descbinds-helm-transform-actions))
-  "A template of `descbinds-helm' source."
+(defcustom helm-descbinds-source-template
+  '((candidate-transformer . helm-descbinds-transform-candidates)
+    (persistent-action . helm-descbinds-action:describe)
+    (action-transformer . helm-descbinds-transform-actions))
+  "A template of `helm-descbinds' source."
   :type 'sexp
-  :group 'descbinds-helm)
+  :group 'helm-descbinds)
 
 
-(defun descbinds-helm-all-sections (buffer &optional prefix menus)
+(defun helm-descbinds-all-sections (buffer &optional prefix menus)
   (with-temp-buffer
     (let ((indent-tabs-mode t))
       (describe-buffer-bindings buffer prefix menus))
@@ -170,78 +170,78 @@ This function called two argument KEY and BINDING."
       (push (cons header (nreverse section)) sections)
       (nreverse sections))))
 
-(defun descbinds-helm-action:execute (candidate)
+(defun helm-descbinds-action:execute (candidate)
   "An action that execute selected CANDIDATE command."
   (call-interactively (cdr candidate)))
 
-(defun descbinds-helm-action:describe (candidate)
+(defun helm-descbinds-action:describe (candidate)
   "An action that describe selected CANDIDATE function."
   (describe-function (cdr candidate)))
 
-(defun descbinds-helm-action:find-func (candidate)
+(defun helm-descbinds-action:find-func (candidate)
   "An action that find selected CANDIDATE function."
   (find-function (cdr candidate)))
 
-(defun descbinds-helm-default-candidate-formatter (key binding)
+(defun helm-descbinds-default-candidate-formatter (key binding)
   "Default candidate formatter."
   (format "%-10s\t%s" key binding))
 
-(defun descbinds-helm-sort-sections (sections)
+(defun helm-descbinds-sort-sections (sections)
   (flet ((order (x)
 		(loop for n = 0 then (1+ n)
-		      for regexp in descbinds-helm-section-order
+		      for regexp in helm-descbinds-section-order
 		      if (and (car x) (string-match regexp (car x))) return n
 		      finally return n)))
     (sort sections (lambda (a b)
 		     (< (order a) (order b))))))
 
-(defun descbinds-helm-transform-candidates (candidates)
+(defun helm-descbinds-transform-candidates (candidates)
   (mapcar
    (lambda (pair)
-     (cons (funcall descbinds-helm-candidate-formatter
+     (cons (funcall helm-descbinds-candidate-formatter
 		    (car pair) (cdr pair))
 	   (cons (car pair) (intern-soft (cdr pair)))))
    candidates))
 
-(defun descbinds-helm-transform-actions (actions candidate)
-  (and (commandp (cdr candidate)) (or actions descbinds-helm-actions)))
+(defun helm-descbinds-transform-actions (actions candidate)
+  (and (commandp (cdr candidate)) (or actions helm-descbinds-actions)))
 
-(defun descbinds-helm-sources (buffer &optional prefix menus)
+(defun helm-descbinds-sources (buffer &optional prefix menus)
   (mapcar
    (lambda (section)
-     (descbinds-helm-source (car section) (cdr section)))
-   (descbinds-helm-sort-sections
-    (descbinds-helm-all-sections buffer prefix menus))))
+     (helm-descbinds-source (car section) (cdr section)))
+   (helm-descbinds-sort-sections
+    (helm-descbinds-all-sections buffer prefix menus))))
 
-(defun descbinds-helm-source (name candidates)
+(defun helm-descbinds-source (name candidates)
   `((name . ,name)
     (candidates . ,candidates)
-    ,@descbinds-helm-source-template))
+    ,@helm-descbinds-source-template))
 
-(defun descbinds-helm (&optional prefix buffer)
+(defun helm-descbinds (&optional prefix buffer)
   "Yet Another `describe-bindings' with `helm'."
   (interactive)
   (let ((helm-samewindow (and (not (minibufferp))
-                            (memq descbinds-helm-window-style
+                            (memq helm-descbinds-window-style
                                   '(same-window one-window))))
         (helm-before-initialize-hook (if (and (not (minibufferp))
-                                            (eq descbinds-helm-window-style 'one-window))
+                                            (eq helm-descbinds-window-style 'one-window))
                                          (cons 'delete-other-windows helm-before-initialize-hook)
                                        helm-before-initialize-hook)))
-    (helm :sources (descbinds-helm-sources (or buffer (current-buffer)) prefix))))
+    (helm :sources (helm-descbinds-sources (or buffer (current-buffer)) prefix))))
 
-(defvar descbinds-helm-Orig-describe-bindings
+(defvar helm-descbinds-Orig-describe-bindings
   (symbol-function 'describe-bindings))
 
-(defun descbinds-helm-install ()
-  "Use `descbinds-helm' as a replacement of `describe-bindings'."
+(defun helm-descbinds-install ()
+  "Use `helm-descbinds' as a replacement of `describe-bindings'."
   (interactive)
-  (fset 'describe-bindings 'descbinds-helm))
+  (fset 'describe-bindings 'helm-descbinds))
 
-(defun descbinds-helm-uninstall ()
+(defun helm-descbinds-uninstall ()
   "Restore original `describe-bindings'."
   (interactive)
-  (fset 'describe-bindings descbinds-helm-Orig-describe-bindings))
+  (fset 'describe-bindings helm-descbinds-Orig-describe-bindings))
 
 (provide 'helm-descbinds)
 
