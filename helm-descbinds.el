@@ -244,6 +244,7 @@ This function called two argument KEY and BINDING."
     (candidates . ,candidates)
     ,@helm-descbinds-source-template))
 
+;;;###autoload
 (defun helm-descbinds (&optional prefix buffer)
   "Yet Another `describe-bindings' with `helm'."
   (interactive)
