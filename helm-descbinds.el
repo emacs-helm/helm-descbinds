@@ -244,6 +244,7 @@ This function called two argument KEY and BINDING."
     (candidates . ,candidates)
     ,@helm-descbinds-source-template))
 
+;;;###autoload
 (defun helm-descbinds (&optional prefix buffer)
   "Yet Another `describe-bindings' with `helm'."
   (interactive)
@@ -259,11 +260,13 @@ This function called two argument KEY and BINDING."
 (defvar helm-descbinds-Orig-describe-bindings
   (symbol-function 'describe-bindings))
 
+;;;###autoload
 (defun helm-descbinds-install ()
   "Use `helm-descbinds' as a replacement of `describe-bindings'."
   (interactive)
   (fset 'describe-bindings 'helm-descbinds))
 
+;;;###autoload
 (defun helm-descbinds-uninstall ()
   "Restore original `describe-bindings'."
   (interactive)
