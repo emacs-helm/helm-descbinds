@@ -29,7 +29,9 @@
 ;; Add followings on your .emacs.
 ;;
 ;;   (require 'helm-descbinds)
-;;   (helm-descbinds-install)
+;;   (helm-descbinds-mode)
+;;
+;; or use customize to set `helm-descbinds-mode' to t.
 ;;
 ;; Now, `describe-bindings' is replaced to `helm-descbinds'. Type
 ;; `C-h b', `C-x C-h' these run `helm-descbinds'.
@@ -146,6 +148,31 @@ This function called two argument KEY and BINDING."
   :type 'sexp
   :group 'helm-descbinds)
 
+;;;###autoload
+(define-minor-mode helm-descbinds-mode
+  "Use `helm' for `describe-bindings'"
+  :group 'helm-descbinds
+  :global t
+  (if helm-descbinds-mode
+      (progn
+        (define-key help-map [remap describe-bindings] 'helm-descbinds)
+        (global-set-key [remap describe-bindings] 'helm-descbinds))
+    (define-key help-map [remap describe-bindings] nil)
+    (global-unset-key [remap describe-bindings])))
+
+;;;###autoload
+(defun helm-descbinds-install ()
+  "Use `helm-descbinds' as a replacement of `describe-bindings'."
+  (interactive)
+  (helm-descbinds-mode 1))
+(make-obsolete 'helm-descbinds-install 'helm-descbinds-mode)
+
+;;;###autoload
+(defun helm-descbinds-uninstall ()
+  "Restore original `describe-bindings'."
+  (interactive)
+  (helm-descbinds-mode -1))
+(make-obsolete 'helm-descbinds-uninstall 'helm-descbinds-mode)
 
 (defun helm-descbinds-all-sections (buffer &optional prefix menus)
   (with-temp-buffer
@@ -256,21 +283,6 @@ This function called two argument KEY and BINDING."
                                          (cons 'delete-other-windows helm-before-initialize-hook)
                                        helm-before-initialize-hook)))
     (helm :sources (helm-descbinds-sources (or buffer (current-buffer)) prefix))))
-
-(defvar helm-descbinds-Orig-describe-bindings
-  (symbol-function 'describe-bindings))
-
-;;;###autoload
-(defun helm-descbinds-install ()
-  "Use `helm-descbinds' as a replacement of `describe-bindings'."
-  (interactive)
-  (fset 'describe-bindings 'helm-descbinds))
-
-;;;###autoload
-(defun helm-descbinds-uninstall ()
-  "Restore original `describe-bindings'."
-  (interactive)
-  (fset 'describe-bindings helm-descbinds-Orig-describe-bindings))
 
 (provide 'helm-descbinds)
 
