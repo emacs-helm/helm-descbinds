@@ -41,7 +41,7 @@
 ;;
 ;;  - When type RET, selected candidate command is executed.
 ;;
-;;  - When type ESC, You can "Execute", "Describe Function" or "Find
+;;  - When type TAB, You can "Execute", "Describe Function" or "Find
 ;;    Function" by the menu.
 ;;
 ;;  - When type C-z, selected command is described without quiting.
@@ -138,7 +138,6 @@ This function called two argument KEY and BINDING."
 	  (const :tag "Split Window" split-window))
   :group 'helm-descbinds)
 
-
 (defcustom helm-descbinds-section-order
   '("Major Mode Bindings" "Minor Mode Bindings" "Global Bindings")
   "A list of section order by name regexp."
@@ -148,7 +147,7 @@ This function called two argument KEY and BINDING."
 (defcustom helm-descbinds-source-template
   '((candidate-transformer . helm-descbinds-transform-candidates)
     (persistent-action . helm-descbinds-action:describe)
-    (action-transformer . helm-descbinds-transform-actions))
+    (action . helm-descbinds-actions))
   "A template of `helm-descbinds' source."
   :type 'sexp
   :group 'helm-descbinds)
@@ -259,10 +258,6 @@ This function called two argument KEY and BINDING."
                            (unless (member command helm-descbinds-strings-to-ignore)
                              command))))))
    candidates))
-
-(defun helm-descbinds-transform-actions (actions candidate)
-  (or (and (commandp (cdr candidate) 'interactive) (or actions helm-descbinds-actions))
-      (and (stringp (cdr candidate)) helm-descbinds-string-actions)))
 
 (defun helm-descbinds-sources (buffer &optional prefix menus)
   (mapcar
