@@ -1,11 +1,12 @@
 ;;; helm-descbinds.el --- Yet Another `describe-bindings' with `helm'.
 
 ;; Copyright (C) 2008, 2009, 2010  Taiki SUGAWARA <buzz.taiki@gmail.com>
-;; Copyright (C) 2012  Michael Markert <markert.michael@googlemail.com>
+;; Copyright (C) 2012, 2013  Michael Markert <markert.michael@googlemail.com>
+;; Copyright (C) 2013 Daniel Hackney <dan@haxney.org>
 
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; Keywords: helm, help
-;; Version: 1.07
+;; Version: 1.08
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -46,6 +47,10 @@
 ;;  - When type C-z, selected command is described without quiting.
 
 ;;; History:
+;; 2013-02-23 Michael Markert <markert.michael@googlemail.com>
+;;   * helm-descbinds.el: Version 1.08
+;;   Merge Daniel Hackney's helm-descbinds minor mode.
+;;
 ;; 2012-03-18 Michael Markert <markert.michael@googlemail.com>
 ;;   * helm-descbinds.el: Version 1.07
 ;;   make strings bound to keys insertable
