@@ -276,7 +276,7 @@ This function called two argument KEY and BINDING."
 (defun helm-descbinds (&optional prefix buffer)
   "Yet Another `describe-bindings' with `helm'."
   (interactive)
-  (let ((helm-samewindow (and (not (minibufferp))
+  (let ((helm-full-frame (and (not (minibufferp))
                             (memq helm-descbinds-window-style
                                   '(same-window one-window))))
         (helm-before-initialize-hook (if (and (not (minibufferp))
