@@ -170,14 +170,14 @@ This function called two argument KEY and BINDING."
   "Use `helm-descbinds' as a replacement of `describe-bindings'."
   (interactive)
   (helm-descbinds-mode 1))
-(make-obsolete 'helm-descbinds-install 'helm-descbinds-mode)
+(make-obsolete 'helm-descbinds-install 'helm-descbinds-mode "1.08")
 
 ;;;###autoload
 (defun helm-descbinds-uninstall ()
   "Restore original `describe-bindings'."
   (interactive)
   (helm-descbinds-mode -1))
-(make-obsolete 'helm-descbinds-uninstall 'helm-descbinds-mode)
+(make-obsolete 'helm-descbinds-uninstall 'helm-descbinds-mode "1.08")
 
 (defun helm-descbinds-all-sections (buffer &optional prefix menus)
   (with-temp-buffer
