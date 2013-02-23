@@ -50,6 +50,7 @@
 ;; 2013-02-23 Michael Markert <markert.michael@googlemail.com>
 ;;   * helm-descbinds.el: Version 1.08
 ;;   Merge Daniel Hackney's helm-descbinds minor mode.
+;;   Several bugfixes.
 ;;
 ;; 2012-03-18 Michael Markert <markert.michael@googlemail.com>
 ;;   * helm-descbinds.el: Version 1.07
@@ -283,6 +284,10 @@ This function called two argument KEY and BINDING."
                                          (cons 'delete-other-windows helm-before-initialize-hook)
                                        helm-before-initialize-hook)))
     (helm :sources (helm-descbinds-sources (or buffer (current-buffer)) prefix))))
+
+;; don't use helm in helm
+(add-hook 'helm-before-initialize-hook #'helm-descbinds-uninstall)
+(add-hook 'helm-cleanup-hook #'helm-descbinds-install)
 
 (provide 'helm-descbinds)
 
