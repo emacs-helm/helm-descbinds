@@ -153,17 +153,16 @@ This function called two argument KEY and BINDING."
   :type 'sexp
   :group 'helm-descbinds)
 
+(defvar helm-descbinds-Orig-describe-bindings (symbol-function 'describe-bindings))
+
 ;;;###autoload
 (define-minor-mode helm-descbinds-mode
   "Use `helm' for `describe-bindings'"
   :group 'helm-descbinds
   :global t
   (if helm-descbinds-mode
-      (progn
-        (define-key help-map [remap describe-bindings] 'helm-descbinds)
-        (global-set-key [remap describe-bindings] 'helm-descbinds))
-    (define-key help-map [remap describe-bindings] nil)
-    (global-unset-key [remap describe-bindings])))
+      (fset 'describe-bindings #'helm-descbinds)
+    (fset 'describe-bindings helm-descbinds-Orig-describe-bindings)))
 
 ;;;###autoload
 (defun helm-descbinds-install ()
