@@ -7,6 +7,7 @@
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; Keywords: helm, help
 ;; Version: 1.08
+;; Package-Requires: ((helm "1.5"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
