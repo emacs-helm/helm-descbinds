@@ -240,14 +240,13 @@ This function called two argument KEY and BINDING."
   "Default candidate formatter."
   (format "%-10s\t%s" key binding))
 
-(defun helm-descbinds-sort-sections (sections)
-  (flet ((order (x)
-		(loop for n = 0 then (1+ n)
-		      for regexp in helm-descbinds-section-order
-		      if (and (car x) (string-match regexp (car x))) return n
-		      finally return n)))
-    (sort sections (lambda (a b)
-		     (< (order a) (order b))))))
+(defun helm-descbinds-order-section (section)
+  (loop for n = 0 then (1+ n)
+        for regexp in helm-descbinds-section-order
+        if (and (car section) (string-match regexp (car section)))
+           return n
+        finally
+           return n))
 
 (defun helm-descbinds-transform-candidates (candidates)
   (mapcar
@@ -264,8 +263,11 @@ This function called two argument KEY and BINDING."
   (mapcar
    (lambda (section)
      (helm-descbinds-source (car section) (cdr section)))
-   (helm-descbinds-sort-sections
-    (helm-descbinds-all-sections buffer prefix menus))))
+   (sort
+    (helm-descbinds-all-sections buffer prefix menus)
+    (lambda (a b)
+      (< (helm-descbinds-order-section a)
+         (helm-descbinds-order-section b))))))
 
 (defun helm-descbinds-source (name candidates)
   `((name . ,name)
