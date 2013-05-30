@@ -109,16 +109,6 @@
 	   (function :tag "Function")))
   :group 'helm-descbinds)
 
-(defcustom helm-descbinds-string-actions
-  '(("Insert" . helm-descbinds-action:insert-string))
-  "Actions of selected string candidate."
-  :type '(repeat
-          (cons
-           :tag "Action"
-           (string :tag "Name")
-           (function :tag "Function")))
-  :group 'helm-descbinds)
-
 (defcustom helm-descbinds-strings-to-ignore
   '("Keyboard Macro" "Prefix Command")
   "Strings to ignore as a possible string candidate."
@@ -130,7 +120,6 @@
 This function called two argument KEY and BINDING."
   :type 'function
   :group 'helm-descbinds)
-
 
 (defcustom helm-descbinds-window-style 'one-window
   "Window splitting style."
@@ -222,7 +211,12 @@ This function called two argument KEY and BINDING."
 
 (defun helm-descbinds-action:execute (candidate)
   "An action that execute selected CANDIDATE command."
-  (call-interactively (cdr candidate)))
+  (let ((x (cdr candidate)))
+    (cond
+     ((stringp x)
+      (insert x))
+     ((commandp x)
+      (call-interactively x)))))
 
 (defun helm-descbinds-action:describe (candidate)
   "An action that describe selected CANDIDATE function."
@@ -231,10 +225,6 @@ This function called two argument KEY and BINDING."
 (defun helm-descbinds-action:find-func (candidate)
   "An action that find selected CANDIDATE function."
   (find-function (cdr candidate)))
-
-(defun helm-descbinds-action:insert-string (candidate)
-  "An action that inserts the string CANDIDATE."
-  (insert (cdr candidate)))
 
 (defun helm-descbinds-default-candidate-formatter (key binding)
   "Default candidate formatter."
