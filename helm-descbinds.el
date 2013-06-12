@@ -144,6 +144,7 @@ This function called two argument KEY and BINDING."
   :group 'helm-descbinds)
 
 (defvar helm-descbinds-Orig-describe-bindings (symbol-function 'describe-bindings))
+(defvar helm-descbind--initial-full-frame helm-full-frame)
 
 ;;;###autoload
 (define-minor-mode helm-descbinds-mode
@@ -211,7 +212,8 @@ This function called two argument KEY and BINDING."
 
 (defun helm-descbinds-action:execute (candidate)
   "An action that execute selected CANDIDATE command."
-  (let ((x (cdr candidate)))
+  (let ((x (cdr candidate))
+        (helm-full-frame helm-descbind--initial-full-frame))
     (cond
      ((stringp x)
       (insert x))
@@ -268,14 +270,19 @@ This function called two argument KEY and BINDING."
 (defun helm-descbinds (&optional prefix buffer)
   "Yet Another `describe-bindings' with `helm'."
   (interactive)
-  (let ((helm-full-frame (and (not (minibufferp))
-                            (memq helm-descbinds-window-style
-                                  '(same-window one-window))))
+  (let ((old-helm-full-frame helm-full-frame)
+        (helm-full-frame (and (not (minibufferp))
+                              (memq helm-descbinds-window-style
+                                    '(same-window one-window))))
         (helm-before-initialize-hook (if (and (not (minibufferp))
-                                            (eq helm-descbinds-window-style 'one-window))
-                                         (cons 'delete-other-windows helm-before-initialize-hook)
-                                       helm-before-initialize-hook)))
-    (helm :sources (helm-descbinds-sources (or buffer (current-buffer)) prefix))))
+                                              (eq helm-descbinds-window-style
+                                                  'one-window))
+                                         (cons 'delete-other-windows
+                                               helm-before-initialize-hook)
+                                         helm-before-initialize-hook)))
+    (setq helm-descbind--initial-full-frame old-helm-full-frame)
+    (helm :sources (helm-descbinds-sources
+                    (or buffer (current-buffer)) prefix))))
 
 ;; don't use helm in helm
 (add-hook 'helm-before-initialize-hook #'helm-descbinds-uninstall)
