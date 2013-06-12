@@ -136,9 +136,9 @@ This function called two argument KEY and BINDING."
   :group 'helm-descbinds)
 
 (defcustom helm-descbinds-source-template
-  '((candidate-transformer . helm-descbinds-transform-candidates)
+  `((candidate-transformer . helm-descbinds-transform-candidates)
     (persistent-action . helm-descbinds-action:describe)
-    (action . helm-descbinds-actions))
+    (action . ,helm-descbinds-actions))
   "A template of `helm-descbinds' source."
   :type 'sexp
   :group 'helm-descbinds)
