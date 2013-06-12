@@ -284,10 +284,6 @@ This function called two argument KEY and BINDING."
     (helm :sources (helm-descbinds-sources
                     (or buffer (current-buffer)) prefix))))
 
-;; don't use helm in helm
-(add-hook 'helm-before-initialize-hook #'helm-descbinds-uninstall)
-(add-hook 'helm-cleanup-hook #'helm-descbinds-install)
-
 (provide 'helm-descbinds)
 
 ;;; helm-descbinds.el ends here
