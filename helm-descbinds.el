@@ -90,7 +90,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 (require 'helm)
 
 (defgroup helm-descbinds nil
@@ -234,11 +234,11 @@ This function called two argument KEY and BINDING."
   (format "%-10s\t%s" key binding))
 
 (defun helm-descbinds-order-section (section)
-  (loop for n = 0 then (1+ n)
-        for regexp in helm-descbinds-section-order
-        if (and (car section) (string-match regexp (car section)))
+  (cl-loop for n = 0 then (1+ n)
+           for regexp in helm-descbinds-section-order
+           if (and (car section) (string-match regexp (car section)))
            return n
-        finally
+           finally
            return n))
 
 (defun helm-descbinds-transform-candidates (candidates)
