@@ -5,6 +5,7 @@
 ;; Copyright (C) 2013 Daniel Hackney <dan@haxney.org>
 
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
+;; URL: https://github.com/emacs-helm/helm-descbinds
 ;; Keywords: helm, help
 ;; Version: 1.08
 ;; Package-Requires: ((helm "1.5"))
