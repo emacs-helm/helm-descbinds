@@ -138,6 +138,7 @@ This function called two argument KEY and BINDING."
 
 (defcustom helm-descbinds-source-template
   `((candidate-transformer . helm-descbinds-transform-candidates)
+    (filtered-candidate-transformer . helm-fuzzy-highlight-matches)
     (persistent-action . helm-descbinds-action:describe)
     (action . ,helm-descbinds-actions))
   "A template of `helm-descbinds' source."
