@@ -221,7 +221,7 @@ This function called two argument KEY and BINDING."
      ((stringp x)
       (insert x))
      ((commandp x)
-      (call-interactively x)))))
+      (run-at-time 0.01 nil (lambda (command) (call-interactively command)) x)))))
 
 (defun helm-descbinds-action:describe (candidate)
   "An action that describe selected CANDIDATE function."
@@ -282,11 +282,13 @@ This function called two argument KEY and BINDING."
                                                   'one-window))
                                          (cons 'delete-other-windows
                                                helm-before-initialize-hook)
-                                         helm-before-initialize-hook)))
+                                       helm-before-initialize-hook))
+        (enable-recursive-minibuffers t))
     (setq helm-descbind--initial-full-frame old-helm-full-frame)
     (helm :sources (helm-descbinds-sources
                     (or buffer (current-buffer)) prefix)
-          :buffer "*helm-descbinds*")))
+          :resume 'noresume
+          :allow-nest t)))
 
 (provide 'helm-descbinds)
 
