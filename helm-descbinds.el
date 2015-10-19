@@ -287,6 +287,7 @@ This function called two argument KEY and BINDING."
     (setq helm-descbind--initial-full-frame old-helm-full-frame)
     (helm :sources (helm-descbinds-sources
                     (or buffer (current-buffer)) prefix)
+          :buffer "*helm-descbinds*"
           :resume 'noresume
           :allow-nest t)))
 
