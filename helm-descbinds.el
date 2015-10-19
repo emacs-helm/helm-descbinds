@@ -285,7 +285,8 @@ This function called two argument KEY and BINDING."
                                          helm-before-initialize-hook)))
     (setq helm-descbind--initial-full-frame old-helm-full-frame)
     (helm :sources (helm-descbinds-sources
-                    (or buffer (current-buffer)) prefix))))
+                    (or buffer (current-buffer)) prefix)
+          :buffer "*helm-descbinds*")))
 
 (provide 'helm-descbinds)
 
