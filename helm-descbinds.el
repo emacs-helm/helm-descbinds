@@ -5,6 +5,7 @@
 ;; Copyright (C) 2013 Daniel Hackney <dan@haxney.org>
 
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
+;; URL: https://github.com/emacs-helm/helm-descbinds
 ;; Keywords: helm, help
 ;; Version: 1.08
 ;; Package-Requires: ((helm "1.5"))
@@ -138,6 +139,7 @@ This function called two argument KEY and BINDING."
 
 (defcustom helm-descbinds-source-template
   `((candidate-transformer . helm-descbinds-transform-candidates)
+    (filtered-candidate-transformer . helm-fuzzy-highlight-matches)
     (persistent-action . helm-descbinds-action:describe)
     (action . ,helm-descbinds-actions))
   "A template of `helm-descbinds' source."
