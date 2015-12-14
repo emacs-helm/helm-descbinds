@@ -26,10 +26,11 @@
 ;; the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
+
 ;;; Commentary:
 ;; This package is a replacement of `describe-bindings' for Helm.
 
-;;; Usage:
+;; Usage:
 ;; Add followings on your .emacs.
 ;;
 ;;   (require 'helm-descbinds)
@@ -227,7 +228,7 @@ This function will be called with two arguments KEY and BINDING."
 
 ;;;###autoload
 (defun helm-descbinds (&optional prefix buffer)
-  "Yet Another `describe-bindings' with `helm'."
+  "A convenient `describe-bindings' with `helm'."
   (interactive)
   (let ((old-helm-full-frame helm-full-frame)
         (helm-full-frame (and (not (minibufferp))
