@@ -1,4 +1,4 @@
-;;; helm-descbinds.el --- Yet Another `describe-bindings' with `helm'  -*- lexical-binding: t -*-
+;;; helm-descbinds.el --- A convenient `describe-bindings' with `helm'   -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2008, 2009, 2010  Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; Copyright (C) 2012, 2013  Michael Markert <markert.michael@googlemail.com>
@@ -27,7 +27,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
-;; This package is a replacement of `describe-bindings'.
+;; This package is a replacement of `describe-bindings' for Helm.
 
 ;;; Usage:
 ;; Add followings on your .emacs.
@@ -40,63 +40,23 @@
 ;; Now, `describe-bindings' is replaced to `helm-descbinds'. Type
 ;; `C-h b', `C-x C-h' these run `helm-descbinds'.
 ;;
-;; In the Helm buffer, you can select key-binds with helm interface.
+;; In the Helm buffer, you can select key-binds with Helm interface.
 ;;
 ;;  - When type RET, selected candidate command is executed.
 ;;
-;;  - When type TAB, You can "Execute", "Describe Function" or "Find
+;;  - When type TAB, you can "Execute", "Describe Function" or "Find
 ;;    Function" by the menu.
 ;;
-;;  - When type C-z, selected command is described without quiting.
+;;  - When type C-z, selected command is described without quitting.
 
-;;; History:
-;; 2013-02-23 Michael Markert <markert.michael@googlemail.com>
-;;   * helm-descbinds.el: Version 1.08
-;;   Merge Daniel Hackney's helm-descbinds minor mode.
-;;   Several bugfixes.
-;;
-;; 2012-03-18 Michael Markert <markert.michael@googlemail.com>
-;;   * helm-descbinds.el: Version 1.07
-;;   make strings bound to keys insertable
-;;
-;; 2012-03-18 Michael Markert <markert.michael@googlemail.com>
-;;   * helm-descbinds.el: Version 1.06
-;;   port to helm
-;;
-;; 2010-02-05   Taiki SUGAWARA  <sugawara_t@ariel-networks.com>
-;;
-;;   * descbinds-anything.el: Version 1.05
-;;   bug fix.
-;;
-;; 2010-02-02 UTC  Taiki SUGAWARA  <buzz.taiki@gmail.com>
-;;
-;;   * descbinds-anything.el: Version 1.04
-;;   add sorting feature.
-;;   separete sorce creation function.
-;;   add persistent action.
-;;
-;; 2009-03-29 UTC  Taiki SUGAWARA  <buzz.taiki@gmail.com>
-;;
-;;   * descbinds-anything.el: Version 1.03
-;;   fix typo.
-;;
-;; 2008-11-16 UTC  Taiki SUGAWARA  <buzz.taiki@gmail.com>
-;;
-;;   * descbinds-anything.el: Version 1.02
-;;   bound `indent-tabs-mode` to t for nil environment.
-;;
-;; 2008-11-16 UTC  Taiki SUGAWARA  <buzz.taiki@gmail.com>
-;;
-;;   * descbinds-anything.el: fix infinitive-loop when binding-line
-;;   has not tab.
 
 ;;; Code:
 
-(require 'cl-lib)
+(eval-when-compile (require 'cl-lib)) ;cl-loop
 (require 'helm)
 
 (defgroup helm-descbinds nil
-  "Yet Another `describe-bindings' with `helm'."
+  "A convenient `describe-bindings' with `helm'."
   :prefix "helm-descbinds-"
   :group 'helm)
 
@@ -109,8 +69,7 @@
 	  (cons
 	   :tag "Action"
 	   (string :tag "Name")
-	   (function :tag "Function")))
-  :group 'helm-descbinds)
+	   (function :tag "Function"))))
 
 (defcustom helm-descbinds-strings-to-ignore
   '("Keyboard Macro" "Prefix Command")
@@ -118,25 +77,22 @@
   :type '(repeat string))
 
 (defcustom helm-descbinds-candidate-formatter
-  'helm-descbinds-default-candidate-formatter
+  #'helm-descbinds-default-candidate-formatter
   "Candidate formatter function.
-This function called two argument KEY and BINDING."
-  :type 'function
-  :group 'helm-descbinds)
+This function will be called with two arguments KEY and BINDING."
+  :type 'function)
 
 (defcustom helm-descbinds-window-style 'one-window
   "Window splitting style."
   :type '(choice
 	  (const :tag "One Window" one-window)
 	  (const :tag "Same Window" same-window)
-	  (const :tag "Split Window" split-window))
-  :group 'helm-descbinds)
+	  (const :tag "Split Window" split-window)))
 
 (defcustom helm-descbinds-section-order
   '("Major Mode Bindings" "Minor Mode Bindings" "Global Bindings")
   "A list of section order by name regexp."
-  :type '(repeat (regexp :tag "Regexp"))
-  :group 'helm-descbinds)
+  :type '(repeat (regexp :tag "Regexp")))
 
 (defcustom helm-descbinds-source-template
   `((candidate-transformer . helm-descbinds-transform-candidates)
@@ -144,19 +100,18 @@ This function called two argument KEY and BINDING."
     (persistent-action . helm-descbinds-action:describe)
     (action . ,helm-descbinds-actions))
   "A template of `helm-descbinds' source."
-  :type 'sexp
-  :group 'helm-descbinds)
+  :type 'sexp)
 
 (defvar helm-descbinds-Orig-describe-bindings (symbol-function 'describe-bindings))
 (defvar helm-descbind--initial-full-frame helm-full-frame)
 
 ;;;###autoload
 (define-minor-mode helm-descbinds-mode
-  "Use `helm' for `describe-bindings'"
+  "Use `helm' for `describe-bindings'."
   :group 'helm-descbinds
   :global t
   (if helm-descbinds-mode
-      (fset 'describe-bindings #'helm-descbinds)
+      (fset 'describe-bindings #'helm-descbinds) ;FIXME: why don't we just use an :override advice?
     (fset 'describe-bindings helm-descbinds-Orig-describe-bindings)))
 
 ;;;###autoload
