@@ -1,4 +1,4 @@
-;;; helm-descbinds.el --- Yet Another `describe-bindings' with `helm'.
+;;; helm-descbinds.el --- Yet Another `describe-bindings' with `helm'  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2008, 2009, 2010  Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; Copyright (C) 2012, 2013  Michael Markert <markert.michael@googlemail.com>
