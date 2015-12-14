@@ -8,7 +8,7 @@
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; URL: https://github.com/emacs-helm/helm-descbinds
 ;; Keywords: helm, help
-;; Version: 1.9
+;; Version: 1.10
 ;; Package-Requires: ((helm "1.5"))
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -49,6 +49,9 @@
 ;;    Function" by the menu.
 ;;
 ;;  - When type C-z, selected command is described without quitting.
+;;
+;; On a prefix command, hitting RET will restart the session using
+;; this prefix.
 
 
 ;;; Code:
@@ -73,7 +76,7 @@
 	   (function :tag "Function"))))
 
 (defcustom helm-descbinds-strings-to-ignore
-  '("Keyboard Macro" "Prefix Command")
+  '("Keyboard Macro")
   "Strings to ignore as a possible string candidate."
   :type '(repeat string))
 
@@ -99,6 +102,7 @@ This function will be called with two arguments KEY and BINDING."
   `((candidate-transformer . helm-descbinds-transform-candidates)
     (filtered-candidate-transformer . helm-fuzzy-highlight-matches)
     (persistent-action . helm-descbinds-action:describe)
+    (action-transformer . helm-descbinds-action-transformer)
     (action . ,helm-descbinds-actions))
   "A template of `helm-descbinds' source."
   :type 'sexp)
@@ -210,6 +214,16 @@ This function will be called with two arguments KEY and BINDING."
                            (unless (member command helm-descbinds-strings-to-ignore)
                              command))))))
    candidates))
+
+(defun helm-descbinds-action-transformer (actions cand)
+  "Default action transformer for `helm-descbinds'.
+Provide a useful behavior for prefix commands."
+  (if (equal (cdr-safe cand) "Prefix Command")
+      `(("helm-descbinds this prefix" . ,(lambda (cand) (interactive)
+                                           (run-with-idle-timer
+                                            0 nil
+                                            #'describe-bindings (kbd (car cand))))))
+    actions))
 
 (defun helm-descbinds-sources (buffer &optional prefix menus)
   (mapcar
