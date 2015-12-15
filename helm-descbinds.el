@@ -220,7 +220,7 @@ This function will be called with two arguments KEY and BINDING."
 Provide a useful behavior for prefix commands."
   (if (equal (cdr-safe cand) "Prefix Command")
       `(("helm-descbinds this prefix" . ,(lambda (cand) (interactive)
-                                           (run-with-idle-timer
+                                           (run-with-timer
                                             0 nil
                                             #'describe-bindings (kbd (car cand))))))
     actions))
