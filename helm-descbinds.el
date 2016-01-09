@@ -31,6 +31,11 @@
 ;; This package is a replacement of `describe-bindings' for Helm.
 
 ;; Usage:
+;; 
+;; You can use this package independently from Helm - in particular,
+;; you don't need to turn on `helm-mode' to be able to use this.  Helm
+;; just needs to be installed.
+;;
 ;; Add followings on your .emacs.
 ;;
 ;;   (require 'helm-descbinds)
@@ -38,20 +43,28 @@
 ;;
 ;; or use customize to set `helm-descbinds-mode' to t.
 ;;
-;; Now, `describe-bindings' is replaced to `helm-descbinds'. Type
-;; `C-h b', `C-x C-h' these run `helm-descbinds'.
+;; Now, `describe-bindings' is replaced with `helm-descbinds'. As
+;; usual, type `C-h b', or any incomplete key sequence plus C-h , to
+;; run `helm-descbinds'.  The bindings are presented in a similar way
+;; as `describe-bindings ' does, but you can use completion to find
+;; the command you searched for and execute it, or view it's
+;; documentation.
 ;;
-;; In the Helm buffer, you can select key-binds with Helm interface.
+;; In the Helm completions buffer, you match key bindings with the
+;; Helm interface:
 ;;
-;;  - When type RET, selected candidate command is executed.
+;;  - When you type RET, the selected candidate command is executed.
 ;;
-;;  - When type TAB, you can "Execute", "Describe Function" or "Find
-;;    Function" by the menu.
+;;  - When you hit RET on a prefix key, the candidates are narrowed to
+;;    this prefix
 ;;
-;;  - When type C-z, selected command is described without quitting.
+;;  - When you type TAB, you can select "Execute", "Describe" or "Find
+;;    Function" by the menu (i.e. these are the available "actions"
+;;    and are of course also available via their usual shortcuts).
 ;;
-;; On a prefix command, hitting RET will restart the session using
-;; this prefix.
+;;  - When you type C-z (aka "persistent action"), the selected
+;;    command is described without quitting Helm.
+
 
 
 ;;; Code:
@@ -240,7 +253,25 @@ Provide a useful behavior for prefix commands."
 
 ;;;###autoload
 (defun helm-descbinds (&optional prefix buffer)
-  "A convenient `describe-bindings' with `helm'."
+  "A convenient helm version of `describe-bindings'.
+
+Turning on `helm-descbinds-mode' is the recommended way to
+install this command to replace `describe-bindings'.
+
+You complete against a list of keys + command pairs presented in
+a similar way as `describe-bindings' does, split into sections
+defined by the types of the key bindings (minor and major modes,
+global bindings, etc).
+
+The default action executes a command as if the binding had been
+entered, or narrows the commands according to a prefix key,
+respectively.
+
+The persistent action pops up a help buffer for the selected
+command without quitting.
+
+For key translation maps, the default actions are not very
+useful, yet they are listed for completeness."
   (interactive)
   (let ((old-helm-full-frame helm-full-frame)
         (helm-full-frame (and (not (minibufferp))
