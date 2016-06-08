@@ -230,9 +230,9 @@ This function will be called with two arguments KEY and BINDING."
   "Default action transformer for `helm-descbinds'.
 Provide a useful behavior for prefix commands."
   (if (equal (cdr-safe cand) "Prefix Command")
-      `(("helm-descbinds this prefix" . ,(lambda (cand) (interactive)
+      `(("helm-descbinds this prefix" . ,(lambda (cand)
                                            (run-with-timer
-                                            0 nil
+                                            0.1 nil
                                             #'describe-bindings (kbd (car cand))))))
     actions))
 
