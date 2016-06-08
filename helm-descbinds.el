@@ -3,12 +3,12 @@
 ;; Copyright (C) 2008, 2009, 2010  Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; Copyright (C) 2012, 2013  Michael Markert <markert.michael@googlemail.com>
 ;; Copyright (C) 2013 Daniel Hackney <dan@haxney.org>
-;; Copyright (C) 2015 Michael Heerdegen <michael_heerdegen@web.de>
+;; Copyright (C) 2015, 2016 Michael Heerdegen <michael_heerdegen@web.de>
 
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; URL: https://github.com/emacs-helm/helm-descbinds
 ;; Keywords: helm, help
-;; Version: 1.10
+;; Version: 1.11
 ;; Package-Requires: ((helm "1.5"))
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@
 ;; This package is a replacement of `describe-bindings' for Helm.
 
 ;; Usage:
-;; 
+;;
 ;; You can use this package independently from Helm - in particular,
 ;; you don't need to turn on `helm-mode' to be able to use this.  Helm
 ;; just needs to be installed.
