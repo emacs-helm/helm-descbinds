@@ -218,23 +218,21 @@ This function will be called with two arguments KEY and BINDING."
            return n))
 
 (defun helm-descbinds-transform-candidates (candidates)
-  (mapcar
-   (lambda (pair)
-     (let ((key (car pair))
-           (command (cdr pair)))
-       (cons (funcall helm-descbinds-candidate-formatter key command)
-             (cons key (or (intern-soft command) command)))))
-   candidates))
+  (cl-loop for (key . command) in candidates
+           for sym = (intern-soft command)
+           collect
+           (cons (funcall helm-descbinds-candidate-formatter key command)
+                 (cons key (if (commandp sym) sym command)))))
 
 (defun helm-descbinds-action-transformer (actions cand)
   "Default action transformer for `helm-descbinds'.
 Provide a useful behavior for prefix commands."
-  (if (equal (cdr-safe cand) "Prefix Command")
-      `(("helm-descbinds this prefix" . ,(lambda (cand)
-                                           (run-with-timer
-                                            0.1 nil
-                                            #'describe-bindings (kbd (car cand))))))
-    actions))
+  (if (stringp (cdr cand))
+      (helm-make-actions
+       "helm-descbinds this prefix"
+       (lambda (cand)
+         (describe-bindings (kbd (car cand)))))
+      actions))
 
 (defun helm-descbinds-sources (buffer &optional prefix menus)
   (mapcar
