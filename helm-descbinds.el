@@ -8,7 +8,7 @@
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; URL: https://github.com/emacs-helm/helm-descbinds
 ;; Keywords: helm, help
-;; Version: 1.11
+;; Version: 1.12
 ;; Package-Requires: ((helm "1.5"))
 
 ;; This file is free software; you can redistribute it and/or modify
