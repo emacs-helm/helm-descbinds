@@ -245,9 +245,9 @@ Provide a useful behavior for prefix commands."
          (helm-descbinds-order-section b))))))
 
 (defun helm-descbinds-source (name candidates)
-  `((name . ,name)
-    (candidates . ,candidates)
-    ,@helm-descbinds-source-template))
+  (append (helm-build-sync-source name
+              :candidates candidates)
+            helm-descbinds-source-template))
 
 ;;;###autoload
 (defun helm-descbinds (&optional prefix buffer)
