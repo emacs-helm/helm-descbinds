@@ -239,7 +239,7 @@ Provide a useful behavior for prefix commands."
 
 (defun helm-descbinds-source (name candidates)
   (when (and name candidates)
-    (helm-make-source name helm-descbinds-source-class
+    (helm-make-source name 'helm-descbinds-source-class
       :candidates candidates
       :candidate-transformer #'helm-descbinds-transform-candidates
       :filtered-candidate-transformer #'helm-fuzzy-highlight-matches
