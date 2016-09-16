@@ -235,9 +235,11 @@ Provide a useful behavior for prefix commands."
       (< (helm-descbinds-order-section a)
          (helm-descbinds-order-section b))))))
 
+(defclass helm-descbinds-source-class (helm-source-sync) ())
+
 (defun helm-descbinds-source (name candidates)
   (when (and name candidates)
-    (helm-build-in-buffer-source name
+    (helm-make-source name helm-descbinds-source-class
       :candidates candidates
       :candidate-transformer #'helm-descbinds-transform-candidates
       :filtered-candidate-transformer #'helm-fuzzy-highlight-matches
