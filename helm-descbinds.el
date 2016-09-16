@@ -106,15 +106,6 @@ This function will be called with two arguments KEY and BINDING."
   "A list of section order by name regexp."
   :type '(repeat (regexp :tag "Regexp")))
 
-(defcustom helm-descbinds-source-template
-  `((candidate-transformer . helm-descbinds-transform-candidates)
-    (filtered-candidate-transformer . helm-fuzzy-highlight-matches)
-    (persistent-action . helm-descbinds-action:describe)
-    (action-transformer . helm-descbinds-action-transformer)
-    (action . ,helm-descbinds-actions))
-  "A template of `helm-descbinds' source."
-  :type 'sexp)
-
 (defvar helm-descbinds-Orig-describe-bindings (symbol-function 'describe-bindings))
 (defvar helm-descbind--initial-full-frame helm-full-frame)
 
@@ -245,9 +236,14 @@ Provide a useful behavior for prefix commands."
          (helm-descbinds-order-section b))))))
 
 (defun helm-descbinds-source (name candidates)
-  (append (helm-build-sync-source name
-              :candidates candidates)
-            helm-descbinds-source-template))
+  (when (and name candidates)
+    (helm-build-in-buffer-source name
+      :candidates candidates
+      :candidate-transformer #'helm-descbinds-transform-candidates
+      :filtered-candidate-transformer #'helm-fuzzy-highlight-matches
+      :persistent-action #'helm-descbinds-action:describe
+      :action-transformer #'helm-descbinds-action-transformer
+      :action 'helm-descbinds-actions)))
 
 ;;;###autoload
 (defun helm-descbinds (&optional prefix buffer)
