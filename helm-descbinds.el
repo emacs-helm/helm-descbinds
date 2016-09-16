@@ -115,8 +115,8 @@ This function will be called with two arguments KEY and BINDING."
   :group 'helm-descbinds
   :global t
   (if helm-descbinds-mode
-      (fset 'describe-bindings #'helm-descbinds) ;FIXME: why don't we just use an :override advice?
-    (fset 'describe-bindings helm-descbinds-Orig-describe-bindings)))
+      (advice-add 'describe-bindings :override #'helm-descbinds)
+      (advice-remove 'describe-bindings #'helm-descbinds)))
 
 ;;;###autoload
 (defun helm-descbinds-install ()
