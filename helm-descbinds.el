@@ -186,7 +186,10 @@ This function will be called with two arguments KEY and BINDING."
      ((stringp x)
       (insert x))
      ((commandp x)
-      (run-at-time 0.01 nil (lambda (command) (call-interactively command)) x)))))
+      ;; Using a timer here trigger a timer error with help-for-help
+      ;; (and perhaps others that use a timer themselves), so use
+      ;; directly `call-interactively'.
+      (call-interactively x)))))
 
 (defun helm-descbinds-action:describe (candidate)
   "An action that describe selected CANDIDATE function."
