@@ -115,8 +115,11 @@ This function will be called with two arguments KEY and BINDING."
   :group 'helm-descbinds
   :global t
   (if helm-descbinds-mode
-      (advice-add 'describe-bindings :override #'helm-descbinds)
-      (advice-remove 'describe-bindings #'helm-descbinds)))
+      (progn
+        (advice-add 'describe-bindings :override #'helm-descbinds)
+        (global-set-key (kbd "C-h C-h") nil))
+      (advice-remove 'describe-bindings #'helm-descbinds)
+      (global-set-key (kbd "C-h C-h") 'help-for-help)))
 
 ;;;###autoload
 (defun helm-descbinds-install ()
