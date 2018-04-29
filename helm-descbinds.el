@@ -117,9 +117,9 @@ This function will be called with two arguments KEY and BINDING."
   (if helm-descbinds-mode
       (progn
         (advice-add 'describe-bindings :override #'helm-descbinds)
-        (global-set-key (kbd "C-h C-h") nil))
+        (global-unset-key (kbd "<help> C-h")))
       (advice-remove 'describe-bindings #'helm-descbinds)
-      (global-set-key (kbd "C-h C-h") 'help-for-help)))
+      (global-set-key (kbd "<help> C-h") 'help-for-help)))
 
 ;;;###autoload
 (defun helm-descbinds-install ()
