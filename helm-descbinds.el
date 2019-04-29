@@ -230,7 +230,10 @@ Provide a useful behavior for prefix commands."
       (helm-make-actions
        "helm-descbinds this prefix"
        (lambda (cand)
-         (describe-bindings (kbd (car cand)))))
+         (let ((binding (car cand)))
+           (if (member binding '("<make-frame-visible>" "<iconify-frame>"))
+               (message "Key is bound to `ignore' because there is nothing to do")
+             (describe-bindings (kbd binding))))))
       actions))
 
 (defun helm-descbinds-sources (buffer &optional prefix menus)
