@@ -196,7 +196,9 @@ This function will be called with two arguments KEY and BINDING."
   (let ((name (cdr candidate)))
     (if (equal name "Keyboard Macro")
         (describe-key (kbd (car candidate)))
-      (describe-function name))))
+      (and (symbolp name)
+           (fboundp name)
+           (describe-function name)))))
 
 (defun helm-descbinds-action:find-func (candidate)
   "An action that find selected CANDIDATE function."
