@@ -194,6 +194,8 @@ This function will be called with two arguments KEY and BINDING."
 (defun helm-descbinds-action:describe (candidate)
   "An action that describe selected CANDIDATE function."
   (let ((name (cdr candidate)))
+    (when (member name '("ignore" "ignore-event"))
+      (setq name 'ignore))
     (if (equal name "Keyboard Macro")
         (describe-key (kbd (car candidate)))
       (and (symbolp name)
