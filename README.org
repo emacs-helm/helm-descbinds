@@ -1,4 +1,7 @@
 * Helm Descbinds
+
+[[https://travis-ci.com/emacs-helm/helm-descbinds][https://travis-ci.com/emacs-helm/helm-descbinds.svg?branch=master]]
+
 ** What's this?
    Helm Descbinds provides an interface to emacs' =describe-bindings= making the
    currently active key bindings interactively searchable with helm.
