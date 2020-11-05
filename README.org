@@ -1,3 +1,6 @@
+[[https://melpa.org/#/helm-descbinds][file:https://melpa.org/packages/helm-descbinds-badge.svg]]
+[[https://stable.melpa.org/#/helm-descbinds][file:https://stable.melpa.org/packages/helm-descbinds-badge.svg]]
+
 * Helm Descbinds
 ** What's this?
    Helm Descbinds provides an interface to emacs' =describe-bindings= making the
