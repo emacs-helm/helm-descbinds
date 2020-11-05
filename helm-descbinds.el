@@ -224,7 +224,7 @@ see (info \"(elisp) Prefix Keys\").")
        (helm-descbinds-display-string-in-help
         helm-descbinds-prefix-help))
       ((guard (and (symbolp name) (fboundp name)))
-       (describe-function name)))))
+       (funcall helm-describe-function-function name)))))
 
 (defun helm-descbinds-action:find-func (candidate)
   "An action that find selected CANDIDATE function."
