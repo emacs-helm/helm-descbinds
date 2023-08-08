@@ -176,7 +176,14 @@ see (info \"(elisp) Prefix Keys\").")
 				      (match-end 0))))
 		key binding)
 	    (when binding-start
-	      (setq key (buffer-substring-no-properties (point) binding-start)
+              ;; For some reasons on Emacs-29 key description is
+              ;; sometimes 2 lines long, it seems it happen with menus
+              ;; but `describe-buffer-bindings' is always called with
+              ;; MENUS == nil...?
+	      (setq key (car (split-string
+                              (buffer-substring-no-properties
+                               (point) binding-start)
+                              "\n" t))
 		    key (replace-regexp-in-string"^[ \t\n]+" "" key)
 		    key (replace-regexp-in-string"[ \t\n]+$" "" key))
 	      (goto-char binding-start)
