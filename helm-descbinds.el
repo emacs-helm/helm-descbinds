@@ -72,6 +72,9 @@
 (eval-when-compile (require 'cl-lib)) ;cl-loop
 (require 'helm)
 
+(defvar which-key-mode)
+(declare-function which-key-mode "ext:which-key.el")
+
 (defgroup helm-descbinds nil
   "A convenient `describe-bindings' with `helm'."
   :prefix "helm-descbinds-"
@@ -121,6 +124,13 @@ see (info \"(elisp) Prefix Keys\").")
 
 (defvar helm-descbinds-Orig-describe-bindings (symbol-function 'describe-bindings))
 (defvar helm-descbind--initial-full-frame helm-full-frame)
+(defvar helm-descbinds--Orig-which-key-mode nil)
+
+;; Prevent usage of both which-key and helm-descbinds, which-key is
+;; starting a nasty timer which override helm-descbinds if user do not
+;; type fast C-h after a prefix command e.g. C-x, ensure which-key is
+;; disabled when turning on helm-descbinds-mode and reenabled (if
+;; already enabled and available) when disabling helm-descbinds-mode.
 
 ;;;###autoload
 (define-minor-mode helm-descbinds-mode
@@ -130,9 +140,20 @@ see (info \"(elisp) Prefix Keys\").")
   (if helm-descbinds-mode
       (progn
         (advice-add 'describe-bindings :override #'helm-descbinds)
-        (global-unset-key (kbd "<help> C-h")))
+        (global-unset-key (kbd "<help> C-h"))
+        ;; Which-key mode has been started before enabling helm-descbinds-mode
+        (when (and (fboundp 'which-key-mode) which-key-mode)
+          (setq helm-descbinds--Orig-which-key-mode which-key-mode)
+          (which-key-mode -1))
+        ;; Which-key mode is not started yet, prevent starting it
+        ;; We don't check for (fboundp 'which-key-mode) in case
+        ;; which-key is not already installed.
+        (advice-add 'which-key-mode :override #'ignore))
       (advice-remove 'describe-bindings #'helm-descbinds)
-      (global-set-key (kbd "<help> C-h") 'help-for-help)))
+      (global-set-key (kbd "<help> C-h") 'help-for-help)
+      (when (fboundp 'which-key-mode)
+        (advice-remove 'which-key-mode #'ignore)
+        (which-key-mode helm-descbinds--Orig-which-key-mode))))
 
 ;;;###autoload
 (defun helm-descbinds-install ()
