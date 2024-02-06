@@ -153,23 +153,20 @@ see (info \"(elisp) Prefix Keys\").")
     (let ((indent-tabs-mode t))
       (describe-buffer-bindings buffer prefix menus))
     (goto-char (point-min))
-    (let ((header-p (not (= (char-after) ?\f)))
+    (let ((header-p (not (= (char-after) ?\f))) ;; ?\f == ^L
 	  sections header section)
       (while (not (eobp))
 	(cond
 	 (header-p
 	  (setq header (buffer-substring-no-properties
-			(point)
-			(line-end-position)))
+			(point) (line-end-position)))
 	  (setq header-p nil)
 	  (forward-line 3))
-	 ((= (char-after) ?\f)
+	 ((= (char-after) ?\f) ;; ?\f == ^L
 	  (push (cons header (nreverse section)) sections)
 	  (setq section nil)
 	  (setq header-p t))
-	 ((looking-at "^[ \t]*$")
-	  ;; ignore
-	  )
+	 ((looking-at "^[ \t]*$")) ;; ignore
 	 (t
 	  (let ((binding-start (save-excursion
 				 (and (re-search-forward "\t+" nil t)
@@ -177,15 +174,15 @@ see (info \"(elisp) Prefix Keys\").")
 		key binding)
 	    (when binding-start
               ;; For some reasons on Emacs-29 key description is
-              ;; sometimes 2 lines long, it seems it happen with menus
+              ;; sometimes 2 lines long, it seems it happens with menus
               ;; but `describe-buffer-bindings' is always called with
               ;; MENUS == nil...?
 	      (setq key (car (split-string
                               (buffer-substring-no-properties
                                (point) binding-start)
                               "\n" t))
-		    key (replace-regexp-in-string"^[ \t\n]+" "" key)
-		    key (replace-regexp-in-string"[ \t\n]+$" "" key))
+		    key (replace-regexp-in-string "^[ \t\n]+" "" key)
+		    key (replace-regexp-in-string "[ \t\n]+$" "" key))
 	      (goto-char binding-start)
 	      (setq binding (buffer-substring-no-properties
 			     binding-start
