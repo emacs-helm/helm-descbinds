@@ -80,6 +80,12 @@
   :prefix "helm-descbinds-"
   :group 'helm)
 
+(defface helm-descbinds-key '((t :box t))
+  "Face for keys in helm-descbinds.")
+
+(defface helm-descbinds-binding '((t :inherit font-lock-warning-face))
+  "Face for bindings in helm-descbinds.")
+
 (defcustom helm-descbinds-actions
   '(("Execute" . helm-descbinds-action:execute)
     ("Describe" . helm-descbinds-action:describe)
@@ -257,7 +263,9 @@ see (info \"(elisp) Prefix Keys\").")
 
 (defun helm-descbinds-default-candidate-formatter (key binding)
   "Default candidate formatter."
-  (format "%-10s\t%s" key binding))
+  (format "%-10s\t%s"
+          (propertize key 'face 'helm-descbinds-key)
+          (propertize binding 'face 'helm-descbinds-binding)))
 
 (defun helm-descbinds-order-section (section)
   (cl-loop for n = 0 then (1+ n)
