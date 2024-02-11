@@ -312,7 +312,6 @@ Provide a useful behavior for prefix commands."
     (helm-make-source name 'helm-descbinds-source-class
       :candidates candidates
       :candidate-transformer #'helm-descbinds-transform-candidates
-      :filtered-candidate-transformer #'helm-fuzzy-highlight-matches
       :persistent-action #'helm-descbinds-action:describe
       :action-transformer #'helm-descbinds-action-transformer
       :action 'helm-descbinds-actions)))
