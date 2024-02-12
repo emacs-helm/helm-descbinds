@@ -138,11 +138,17 @@ see (info \"(elisp) Prefix Keys\").")
 ;; disabled when turning on helm-descbinds-mode and reenabled (if
 ;; already enabled and available) when disabling helm-descbinds-mode.
 (defun helm-descbinds--override-which-key (&rest _args)
+  "Used to override `which-key-mode' by advice."
   (error "`which-key-mode' can't be used with `helm-descbinds-mode'"))
 
 ;;;###autoload
 (define-minor-mode helm-descbinds-mode
-  "Use `helm' for `describe-bindings'."
+    "Use `helm' for `describe-bindings'.
+
+When this mode is enabled, pressing `C-h' after a prefix key
+e.g. `C-x' will pop up a helm buffer showing all the keys starting
+with this prefix, one can then execute the command bound to this key,
+look at the docstring or find the definition of this command."
   :group 'helm-descbinds
   :global t
   (if helm-descbinds-mode
@@ -158,11 +164,11 @@ see (info \"(elisp) Prefix Keys\").")
         ;; We don't check for (fboundp 'which-key-mode) in case
         ;; which-key is not already installed.
         (advice-add 'which-key-mode :override #'helm-descbinds--override-which-key))
-      (advice-remove 'describe-bindings #'helm-descbinds)
-      (global-set-key (kbd "<help> C-h") 'help-for-help)
-      (when (fboundp 'which-key-mode)
-        (advice-remove 'which-key-mode #'helm-descbinds--override-which-key)
-        (which-key-mode helm-descbinds--Orig-which-key-mode))))
+    (advice-remove 'describe-bindings #'helm-descbinds)
+    (global-set-key (kbd "<help> C-h") 'help-for-help)
+    (when (fboundp 'which-key-mode)
+      (advice-remove 'which-key-mode #'helm-descbinds--override-which-key)
+      (which-key-mode helm-descbinds--Orig-which-key-mode))))
 
 ;;;###autoload
 (defun helm-descbinds-install ()
@@ -179,6 +185,10 @@ see (info \"(elisp) Prefix Keys\").")
 (make-obsolete 'helm-descbinds-uninstall 'helm-descbinds-mode "1.08")
 
 (defun helm-descbinds-all-sections (buffer &optional prefix menus)
+  "Collect data from `describe-buffer-bindings' output.
+
+Return a list of sections, each section beeing an alist composed of
+\(KEY . COMMAND)."
   (with-temp-buffer
     (let ((indent-tabs-mode t))
       (describe-buffer-bindings buffer prefix menus))
@@ -239,6 +249,7 @@ see (info \"(elisp) Prefix Keys\").")
       (call-interactively x)))))
 
 (defun helm-descbinds-display-string-in-help (str)
+  "Display string STR in an help buffer."
   (with-current-buffer (help-buffer)
     (let ((inhibit-read-only t))
       (erase-buffer)
@@ -271,6 +282,9 @@ see (info \"(elisp) Prefix Keys\").")
           (propertize binding 'face 'helm-descbinds-binding)))
 
 (defun helm-descbinds-order-section (section)
+  "Return the number in which SECTION should appear.
+
+This is used to reorder all sections as sources."
   (cl-loop for n = 0 then (1+ n)
            for regexp in helm-descbinds-section-order
            if (and (car section) (string-match regexp (car section)))
@@ -279,6 +293,7 @@ see (info \"(elisp) Prefix Keys\").")
            return n))
 
 (defun helm-descbinds-transform-candidates (candidates)
+  "Transform CANDIDATES for display."
   (cl-loop for (key . command) in candidates
            for sym = (intern-soft command)
            collect
@@ -299,6 +314,10 @@ Provide a useful behavior for prefix commands."
       actions))
 
 (defun helm-descbinds-sources (buffer &optional prefix menus)
+  "Build helm-descbinds sources for BUFFER.
+If PREFIX is specified only sources for bindings starting with PREFIX
+are shown.  Optionally if MENUS is specified show commands that have a
+starting point in menus."
   (mapcar
    (lambda (section)
      (helm-descbinds-source (car section) (cdr section)))
@@ -311,6 +330,7 @@ Provide a useful behavior for prefix commands."
 (defclass helm-descbinds-source-class (helm-source-sync) ())
 
 (defun helm-descbinds-source (name candidates)
+  "Return a helm source named NAME for displaying CANDIDATES."
   (when (and name candidates)
     (helm-make-source name 'helm-descbinds-source-class
       :candidates candidates
