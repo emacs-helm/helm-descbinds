@@ -137,6 +137,8 @@ see (info \"(elisp) Prefix Keys\").")
 ;; type fast C-h after a prefix command e.g. C-x, ensure which-key is
 ;; disabled when turning on helm-descbinds-mode and reenabled (if
 ;; already enabled and available) when disabling helm-descbinds-mode.
+(defun helm-descbinds--override-which-key (&rest _args)
+  (error "`which-key-mode' can't be used with `helm-descbinds-mode'"))
 
 ;;;###autoload
 (define-minor-mode helm-descbinds-mode
@@ -150,15 +152,16 @@ see (info \"(elisp) Prefix Keys\").")
         ;; Which-key mode has been started before enabling helm-descbinds-mode
         (when (and (fboundp 'which-key-mode) which-key-mode)
           (setq helm-descbinds--Orig-which-key-mode which-key-mode)
-          (which-key-mode -1))
+          (which-key-mode -1)
+          (message "Disabling `which-key-mode' which would defeat helm-descbinds"))
         ;; Which-key mode is not started yet, prevent starting it
         ;; We don't check for (fboundp 'which-key-mode) in case
         ;; which-key is not already installed.
-        (advice-add 'which-key-mode :override #'ignore))
+        (advice-add 'which-key-mode :override #'helm-descbinds--override-which-key))
       (advice-remove 'describe-bindings #'helm-descbinds)
       (global-set-key (kbd "<help> C-h") 'help-for-help)
       (when (fboundp 'which-key-mode)
-        (advice-remove 'which-key-mode #'ignore)
+        (advice-remove 'which-key-mode #'helm-descbinds--override-which-key)
         (which-key-mode helm-descbinds--Orig-which-key-mode))))
 
 ;;;###autoload
