@@ -115,6 +115,11 @@ This function will be called with two arguments KEY and BINDING."
   "A list of section order by name regexp."
   :type '(repeat (regexp :tag "Regexp")))
 
+(defcustom helm-descbinds-disable-which-key t
+  "Prevent using `which-key-mode' and `helm-descbinds-mode' together.
+When nil allow using both packages together."
+  :type 'boolean)
+
 (defvar helm-descbinds-prefix-help
   "This is a prefix key, hit RET to see all bindings using this prefix.
 
@@ -156,17 +161,19 @@ look at the docstring or find the definition of this command."
         (advice-add 'describe-bindings :override #'helm-descbinds)
         (global-unset-key (kbd "<help> C-h"))
         ;; Which-key mode has been started before enabling helm-descbinds-mode
-        (when (and (fboundp 'which-key-mode) which-key-mode)
+        (when (and (fboundp 'which-key-mode) which-key-mode
+                   helm-descbinds-disable-which-key)
           (setq helm-descbinds--Orig-which-key-mode which-key-mode)
           (which-key-mode -1)
           (message "Disabling `which-key-mode' which would defeat helm-descbinds"))
         ;; Which-key mode is not started yet, prevent starting it
         ;; We don't check for (fboundp 'which-key-mode) in case
         ;; which-key is not already installed.
-        (advice-add 'which-key-mode :override #'helm-descbinds--override-which-key))
+        (when helm-descbinds-disable-which-key
+          (advice-add 'which-key-mode :override #'helm-descbinds--override-which-key)))
     (advice-remove 'describe-bindings #'helm-descbinds)
     (global-set-key (kbd "<help> C-h") 'help-for-help)
-    (when (fboundp 'which-key-mode)
+    (when (and (fboundp 'which-key-mode) helm-descbinds-disable-which-key)
       (advice-remove 'which-key-mode #'helm-descbinds--override-which-key)
       (which-key-mode helm-descbinds--Orig-which-key-mode))))
 
