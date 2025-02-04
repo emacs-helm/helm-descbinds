@@ -4,6 +4,7 @@
 ;; Copyright (C) 2012, 2013  Michael Markert <markert.michael@googlemail.com>
 ;; Copyright (C) 2013 Daniel Hackney <dan@haxney.org>
 ;; Copyright (C) 2015, 2016 Michael Heerdegen <michael_heerdegen@web.de>
+;; Copyright (C) 2012 ~ 2025 Thierry Volpiatto
 
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; URL: https://github.com/emacs-helm/helm-descbinds
