@@ -118,7 +118,8 @@ This function will be called with two arguments KEY and BINDING."
 
 (defcustom helm-descbinds-disable-which-key t
   "Prevent using `which-key-mode' and `helm-descbinds-mode' together.
-When nil allow using both packages together."
+When nil allow using both packages together and provide a wonderful
+mess, be warned."
   :type 'boolean)
 
 (defvar helm-descbinds-prefix-help
